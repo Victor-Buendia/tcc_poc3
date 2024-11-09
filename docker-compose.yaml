@@ -27,7 +27,7 @@ services:
     env_file:
       - docker.env
     volumes:
-      - ./evento:/src
+      - ./universidade:/src
 
   duckdb:
     depends_on:
@@ -37,5 +37,5 @@ services:
     env_file:
       - docker.env
     volumes:
-      - ./evento/db:/src
+      - ./universidade/db:/src
       - ./postgres:/src/postgres
