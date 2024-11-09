@@ -1,6 +1,0 @@
-[submodule "simple-fhe"]
-	path = simple-fhe-original-repo
-	url = https://github.com/wgxli/simple-fhe.git
-[submodule "SEAL-Python"]
-	path = SEAL-Python-original-repo
-	url = https://github.com/Huelse/SEAL-Python.git
