@@ -55,3 +55,26 @@ print(res)
 res = [chr(x) for x in res]
 
 print(''.join(res))
+
+print(encrypt(25)+encrypt(30))
+# print((encrypt(25)+encrypt(30)).value)
+print(decrypt(encrypt(25)+encrypt(30)))
+
+def encrypt_str(string: str) -> list[str]:
+    return [encrypt(ord(x)).value for x in string]
+voto = encrypt_str("Robson PMDB")
+robson = encrypt_str("PMDB Robson")
+# char -(ord)-> int -(encrypt)-> EncryptedInt -(operations: + - * / % //)-> EncryptedInt -(decrypt)-> int -(chr)-> char
+def mix(elements: str) -> int:
+    return sum(elements*(i+1) if i % 2 == 0 else -elements*(i+1) for i, elements in enumerate(elements))
+
+voto = mix(load_encrypted_str(x) for x in voto)
+robson = mix(load_encrypted_str(x) for x in robson)
+
+print(decrypt(voto))
+print(decrypt(robson))
+print(decrypt(voto) == decrypt(robson))
+
+# print([decrypt(load_encrypted_str(x)) for x in encrypt_str("Robson PMDB")] == [decrypt(load_encrypted_str(x)) for x in voto])
+# print([decrypt(load_encrypted_str(x)) for x in encrypt_str("Robson PMDB")])
+# print([decrypt(load_encrypted_str(x)) for x in voto])
