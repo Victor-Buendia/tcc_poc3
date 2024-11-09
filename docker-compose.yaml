@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: poc3-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${PGDATABASE}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+    volumes:
+      - ./postgres/postgres_data:/var/lib/postgresql/data
+      - ./postgres/scripts/init:/docker-entrypoint-initdb.d/
+      - ./postgres/scripts:/postgres/scripts
+      - ./postgres/tls/certs:/etc/postgresql/certs
+    ports:
+      - "2024:5432"
+    command: >
+      postgres -c ssl=on
+        -c ssl_cert_file=/etc/postgresql/certs/server.crt
+        -c ssl_key_file=/etc/postgresql/certs/server.key
+
+  worker:
+    depends_on:
+        - postgres
+    image: poc3-worker
+    container_name: poc3-worker
+    env_file:
+      - docker.env
+    volumes:
+      - ./evento:/src
+
+  duckdb:
+    depends_on:
+      - postgres
+    image: poc3-duckdb
+    container_name: poc3-duckdb
+    env_file:
+      - docker.env
+    volumes:
+      - ./evento/db:/src
+      - ./postgres:/src/postgres
