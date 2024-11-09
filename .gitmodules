@@ -1,0 +1,3 @@
+[submodule "simple-fhe"]
+	path = simple-fhe
+	url = https://github.com/wgxli/simple-fhe.git
