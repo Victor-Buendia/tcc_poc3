@@ -47,7 +47,8 @@ duckdb: # STARTS DUCKDB INSTANCE AND OPENS DUCKDB CLIENT
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/evento/db:/src --rm --name duckdb duckdb $(DB_PATH_ARG)
 debug: # STARTS A DEBUG SESSION IN WORKER (PYTHON ENVIRONMENT)
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/evento:/src --rm --entrypoint /bin/bash -i -t --name debug worker
-
+standalone-debug: # STARTS A DEBUG SESSION IN WORKER (PYTHON ENVIRONMENT) WITH ROOT PROJECT MOUNTED
+	docker run -it --rm --entrypoint bash -v .:/src poc3-worker
 
 
 generate: # GENERATES RAW DATA

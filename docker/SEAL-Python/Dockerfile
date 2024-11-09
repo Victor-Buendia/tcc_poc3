@@ -10,6 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
     apt install -y git build-essential cmake python3 python3-dev python3-pip && \
     mkdir -p ${SRC}
+RUN echo 'alias python="python3"' >> ~/.bashrc
 
 # copy into container requirements and install them before rest of code
 COPY requirements.txt ${SRC}/requirements.txt
