@@ -26,7 +26,7 @@ class EncryptedValue:
         return self._mode["type"] == "float"
 
     @property
-    def value(self):
+    def str_value(self):
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file_path = temp_file.name
         self._ciphertext.save(file_path)
@@ -34,6 +34,16 @@ class EncryptedValue:
             ciphertext_binary = file.read()
         ciphertext_string = base64.b64encode(ciphertext_binary).decode("utf-8")
         return ciphertext_string
+
+    @property
+    def value(self):
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            file_path = temp_file.name
+        self._ciphertext.save(file_path)
+        with open(file_path, "rb") as file:
+            ciphertext_binary = file.read()
+        ciphertext_int = int.from_bytes(ciphertext_binary, byteorder="big")
+        return ciphertext_binary
 
     def _binop(self, other, cipher_func, plain_func=None, _is_mult: bool = False):
         """
