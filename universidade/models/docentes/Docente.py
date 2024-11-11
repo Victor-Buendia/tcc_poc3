@@ -11,6 +11,7 @@ class Docente(BaseModel):
             nome                = 'Dr. ' + nome
         cpf                     = fake.cpf()
         data_nascimento         = fake.date_of_birth(minimum_age=30, maximum_age=70).isoformat()
+        salario                 = fake.random_int(min=8_000, max=20_000)
         nacionalidade           = fake.country_code() if random.random() < 0.2 else 'BR'
         telefone                = fake.cellphone_number()
         especializacao, curso   = fake.random_element(elements=especializacoes)
@@ -22,6 +23,7 @@ class Docente(BaseModel):
         kwargs.setdefault('matricula',                  matricula)
         kwargs.setdefault('nome',                       nome)
         kwargs.setdefault('cpf',                        cpf)
+        kwargs.setdefault('salario',                    salario)
         kwargs.setdefault('data_nascimento',            data_nascimento)
         kwargs.setdefault('especializacao',             especializacao)
         kwargs.setdefault('curso',                      curso)
