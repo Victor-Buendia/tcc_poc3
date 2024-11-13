@@ -35,10 +35,13 @@ clean: # REMOVES ALL GENERATED FILES
 	docker rm -f -v $$(docker ps -f name=poc3 -q) || true
 	rm -rf universidade/db/*
 	rm -rf postgres/postgres_data
+	rm -rf postgres/tls/certs/*
+	rm -rf postgres/cert_login/certs/*
 	rm -rf $$(find . -type d -name "__pycache__" | xargs)
 	rm -rf $$(find . -type f -name "*.json" | xargs)
 
 psql: # STARTS POSTGRES INSTANCE
+	$(MAKE) certificates
 	docker compose --env-file $(ENV_FILE) up -d postgres
 	sleep 1.5
 	./postgres/tls/postgres_conf.sh # TLS
@@ -69,8 +72,16 @@ patch: # MODIFIES DATA IN POSTGRES DATABASE
 	# docker compose --env-file $(ENV_FILE) run -v $$(pwd)/postgres:/src/postgres --rm --name duckdb duckdb -no-stdin -init ./postgres/scripts/pii.sql $(DB_PATH_ARG)
 	docker exec $$(docker ps -f name=post -q) psql -U ${PGUSER} -d ${PGDATABASE} -f ./postgres/scripts/constraints.sql
 	@echo "${BLUE}Data patching finished!${END}"
+
 restart:
 	docker compose --env-file $(ENV_FILE) restart postgres
+certificates:
+	chmod +x **/*.sh
+	./postgres/tls/generate_cert.sh
+	./postgres/cert_login/generate_user_cert.sh
+	mv server.* ./postgres/tls/certs
+	mv ca.* ./postgres/tls/certs
+	mv consumer.* ./postgres/cert_login/certs
 
 
 
