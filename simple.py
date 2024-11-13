@@ -1,6 +1,6 @@
 # examples/intro/secure.py
 
-from simplefhe import (
+from universidade.libs.simplefhe import (
     encrypt, decrypt,
     generate_keypair,
     set_public_key, set_private_key, set_relin_keys,
@@ -39,11 +39,11 @@ for entry in sensitive_data:
 print(decrypt(soma)) # Decrypt the sum on the client.
 print(sum(sensitive_data))
 
-lol = [encrypt(ord(x)).value for x in 'encripta ai meu pai']
+lol = [encrypt(ord(x)).str_value for x in 'encripta ai meu pai']
 # lol = [decrypt(load_encrypted_str(x)) for x in lol]
 # lol = [chr(x) for x in lol]
 
-xau = [encrypt(ord(x)).value for x in ' pega na minha fubanga']
+xau = [encrypt(ord(x)).str_value for x in ' pega na minha fubanga']
 # xau = [decrypt(load_encrypted_str(x)) for x in xau]
 # xau = [chr(x) for x in xau]
 
@@ -61,7 +61,7 @@ print(encrypt(25)+encrypt(30))
 print(decrypt(encrypt(25)+encrypt(30)))
 
 def encrypt_str(string: str) -> list[str]:
-    return [encrypt(ord(x)).value for x in string]
+    return [encrypt(ord(x)).str_value for x in string]
 voto = encrypt_str("Robson PMDB")
 robson = encrypt_str("PMDB Robson")
 # char -(ord)-> int -(encrypt)-> EncryptedInt -(operations: + - * / % //)-> EncryptedInt -(decrypt)-> int -(chr)-> char

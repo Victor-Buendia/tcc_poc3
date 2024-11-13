@@ -4,7 +4,7 @@ from typing import List
 
 from seal import Ciphertext, Plaintext
 
-import simplefhe
+import libs.simplefhe as simplefhe
 
 import base64
 
@@ -88,7 +88,7 @@ class EncryptedValue:
             # Determine type of other operand
 
         if not isinstance(other, Ciphertext):
-            from simplefhe.encryptors import encode_item
+            from libs.simplefhe.encryptors import encode_item
 
             if plain_func is not None:
                 # Use plain_func for performance

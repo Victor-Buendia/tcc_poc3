@@ -158,7 +158,7 @@ def display_config() -> None:
 
 initialize('int')
 
-from simplefhe.encryptors import encrypt
-from simplefhe.decryptors import decrypt
-from simplefhe.datatypes import load_encrypted_value
-from simplefhe.datatypes import load_encrypted_str
+from .encryptors import encrypt
+from .decryptors import decrypt
+from .datatypes import load_encrypted_value
+from .datatypes import load_encrypted_str

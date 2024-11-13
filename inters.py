@@ -1,6 +1,6 @@
 # examples/intro/secure.py
 
-from simplefhe import (
+from universidade.libs.simplefhe import (
     encrypt, decrypt,
     generate_keypair,
     set_public_key, set_private_key, set_relin_keys,

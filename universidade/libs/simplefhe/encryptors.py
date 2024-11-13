@@ -1,8 +1,8 @@
 from seal import Plaintext, Ciphertext
 
-import simplefhe
+import libs.simplefhe as simplefhe
 
-from simplefhe.datatypes import EncryptedValue
+from libs.simplefhe.datatypes import EncryptedValue
 
 
 def encrypt(item) -> EncryptedValue:

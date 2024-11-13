@@ -1,6 +1,6 @@
 from seal import Plaintext, Ciphertext
 
-import simplefhe
+import libs.simplefhe as simplefhe
 
 
 def decrypt(item):
