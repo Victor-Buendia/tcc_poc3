@@ -10,5 +10,21 @@ ALTER TABLE matriculadisciplinas ADD CONSTRAINT id_disciplina__matriculadiscipli
 ALTER TABLE matriculadisciplinas ADD CONSTRAINT matricula_docente__matriculadisciplinas_to_docentes_fk FOREIGN KEY (matricula_docente) REFERENCES docentes(matricula);
 ALTER TABLE matriculadisciplinas ADD CONSTRAINT matricula_discente__matriculadisciplinas_to_discentes_fk FOREIGN KEY (matricula_discente) REFERENCES discentes(matricula);
 
+ALTER TABLE discentes ENABLE ROW LEVEL SECURITY;
+-- Policy for SELECT operations
+CREATE POLICY consumer_select ON discentes
+    FOR SELECT
+    USING (
+        curso IN ('Física', 'Estatística') -- You can adjust this condition as needed
+    );
+-- Policy for UPDATE operations
+CREATE POLICY consumer_modification ON discentes 
+    FOR UPDATE
+    USING (true)
+    -- USING (current_user = user_name)
+    WITH CHECK (
+        -- current_user = user_name AND
+        curso IN ('Física', 'Estatística')
+    );
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO consumer;
 -- REVOKE ALL PRIVILEGES ON TABLE discente FROM consumer;
