@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:13
+    image: poc3-postgres
     container_name: poc3-postgres
     restart: unless-stopped
     environment:

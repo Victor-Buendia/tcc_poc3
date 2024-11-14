@@ -28,6 +28,7 @@ get-sizes:
 	du -hs -B 1M universidade/data/curated
 
 build: # BUILDS ALL DOCKER IMAGES NEEDED FOR THE PROJECT
+	docker build -t poc3-postgres:latest -f ./docker/postgres.Dockerfile .
 	docker build -t poc3-worker:latest -f ./docker/SEAL-Python/Dockerfile .
 	docker build -t poc3-duckdb:latest -f ./docker/duckdb.Dockerfile --build-arg DB_PATH_ARG=$(DB_PATH_ARG) .
 clean: # REMOVES ALL GENERATED FILES
@@ -41,10 +42,13 @@ clean: # REMOVES ALL GENERATED FILES
 	rm -rf $$(find . -type f -name "*.json" | xargs)
 
 psql: # STARTS POSTGRES INSTANCE
+	chmod +x **/*.sh
 	$(MAKE) certificates
 	docker compose --env-file $(ENV_FILE) up -d postgres
-	sleep 1.5
+	sleep 0.5
 	./postgres/tls/postgres_conf.sh # TLS
+	sleep 0.5
+	./postgres/scripts/auditing.sh # PG_AUDIT
 	$(MAKE) restart
 duckdb: # STARTS DUCKDB INSTANCE AND OPENS DUCKDB CLIENT
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade/db:/src --rm --name duckdb duckdb $(DB_PATH_ARG)
@@ -76,13 +80,11 @@ patch: # MODIFIES DATA IN POSTGRES DATABASE
 restart:
 	docker compose --env-file $(ENV_FILE) restart postgres
 certificates:
-	chmod +x **/*.sh
 	./postgres/tls/generate_cert.sh
 	./postgres/cert_login/generate_user_cert.sh
 	mv server.* ./postgres/tls/certs
 	mv ca.* ./postgres/tls/certs
 	mv consumer.* ./postgres/cert_login/certs
-
 
 
 
