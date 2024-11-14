@@ -7,10 +7,12 @@ postgres_data/
 .DS_*
 *.json
 *.db
+*.pcap
 # Certificates for SSL
-server.crt
-server.csr
-server.key
+*.crt
+*.csr
+*.key
+*.srl
 
 ## Auto-Filled
 # Byte-compiled / optimized / DLL files
