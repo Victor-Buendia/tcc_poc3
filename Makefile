@@ -61,6 +61,7 @@ standalone-debug: # STARTS A DEBUG SESSION IN WORKER (PYTHON ENVIRONMENT) WITH R
 generate: # GENERATES RAW DATA
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --name generate_data worker generate_data.py
 transform: # TRANSFORMS RAW DATA INTO CURATED DATA
+	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --name fhe_keygen worker fhe_keygen.py
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --name transform_data worker transform_data.py
 load: # INGESTS DATA INTO DUCKDB
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --name load_data worker load_data.py
@@ -73,7 +74,7 @@ ingest: # INGESTS DATA INTO POSTGRES
 	@echo "${BLUE}Data ingestion from DuckDB to PostGres finished!${END}"
 patch: # MODIFIES DATA IN POSTGRES DATABASE
 	# docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --name encrypt_data worker encrypt_data.py
-	# docker compose --env-file $(ENV_FILE) run -v $$(pwd)/postgres:/src/postgres --rm --name duckdb duckdb -no-stdin -init ./postgres/scripts/pii.sql $(DB_PATH_ARG)
+	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/postgres:/src/postgres --rm --name duckdb duckdb -no-stdin -init ./postgres/scripts/pii.sql $(DB_PATH_ARG)
 	docker exec $$(docker ps -f name=post -q) psql -U ${PGUSER} -d ${PGDATABASE} -f ./postgres/scripts/constraints.sql
 	@echo "${BLUE}Data patching finished!${END}"
 
