@@ -13,4 +13,5 @@ echo """
 hostssl     all             postgres        0.0.0.0/0               md5
 hostnossl   all             all             0.0.0.0/0               reject
 hostssl     all             consumer        0.0.0.0/0               cert
+hostssl     all             professor        0.0.0.0/0               cert
 """ >> postgres/postgres_data/pg_hba.conf

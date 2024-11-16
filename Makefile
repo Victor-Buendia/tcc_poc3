@@ -86,6 +86,7 @@ certificates:
 	mv server.* ./postgres/tls/certs
 	mv ca.* ./postgres/tls/certs
 	mv consumer.* ./postgres/cert_login/certs
+	mv professor.* ./postgres/cert_login/certs
 
 
 
