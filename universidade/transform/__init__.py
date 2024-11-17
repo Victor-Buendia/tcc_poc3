@@ -5,6 +5,7 @@ import datetime
 from libs import *
 
 load_public_key('keys/public.key')
+load_private_key('keys/private.key')
 load_relin_keys('keys/relin.key')
 display_config()
 
@@ -71,7 +72,7 @@ def transform_matriculadisciplinas(dir_name: str, file_path: str, thread_id: int
                 'matricula_docente': record['matricula_docente'],
                 'id_disciplina': record['id_disciplina'],
                 'semestre': record['semestre'],
-                'nota': encrypt_aes(record['nota']),
+                'nota': encrypt_fhe(record['nota']),
                 'frequencia': record['frequencia'],
                 'status': record['status'],
             } for record in data
