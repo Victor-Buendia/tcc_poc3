@@ -6,8 +6,8 @@ export
 pipeline:
 	# $(MAKE) build
 	$(MAKE) psql
-	$(MAKE) generate
-	$(MAKE) transform
+	# $(MAKE) generate
+	# $(MAKE) transform
 	$(MAKE) load
 	$(MAKE) fix
 	$(MAKE) ingest
@@ -39,7 +39,7 @@ clean: # REMOVES ALL GENERATED FILES
 	rm -rf postgres/tls/certs/*
 	rm -rf postgres/cert_login/certs/*
 	rm -rf $$(find . -type d -name "__pycache__" | xargs)
-	rm -rf $$(find . -type f -name "*.json" | xargs)
+	# rm -rf $$(find . -type f -name "*.json" | xargs)
 
 psql: # STARTS POSTGRES INSTANCE
 	chmod +x **/*.sh
@@ -55,7 +55,7 @@ duckdb: # STARTS DUCKDB INSTANCE AND OPENS DUCKDB CLIENT
 debug: # STARTS A DEBUG SESSION IN WORKER (PYTHON ENVIRONMENT)
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --entrypoint /bin/bash -i -t --name debug worker
 standalone-debug: # STARTS A DEBUG SESSION IN WORKER (PYTHON ENVIRONMENT) WITH ROOT PROJECT MOUNTED
-	docker run -it --rm --entrypoint bash -v .:/src poc3-worker
+	docker run -it --env-file $(ENV_FILE) --rm --entrypoint bash -v .:/src poc3-worker
 
 
 generate: # GENERATES RAW DATA
@@ -87,7 +87,8 @@ certificates:
 	mv ca.* ./postgres/tls/certs
 	mv consumer.* ./postgres/cert_login/certs
 	mv professor.* ./postgres/cert_login/certs
-
+deps:
+	poetry export -f requirements.txt --output requirements.txt
 
 
 
