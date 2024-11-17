@@ -4,14 +4,15 @@ include docker.env
 export
 
 pipeline:
-	# $(MAKE) build
+	$(MAKE) build
 	$(MAKE) psql
-	# $(MAKE) generate
-	# $(MAKE) transform
+	$(MAKE) generate
+	$(MAKE) transform
 	$(MAKE) load
 	$(MAKE) fix
 	$(MAKE) ingest
 	$(MAKE) patch
+	$(MAKE) reports
 
 
 
@@ -39,7 +40,7 @@ clean: # REMOVES ALL GENERATED FILES
 	rm -rf postgres/tls/certs/*
 	rm -rf postgres/cert_login/certs/*
 	rm -rf $$(find . -type d -name "__pycache__" | xargs)
-	# rm -rf $$(find . -type f -name "*.json" | xargs)
+	rm -rf $$(find . -type f -name "*.json" | xargs)
 
 psql: # STARTS POSTGRES INSTANCE
 	chmod +x **/*.sh
@@ -65,6 +66,7 @@ transform: # TRANSFORMS RAW DATA INTO CURATED DATA
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --name transform_data worker transform_data.py
 load: # INGESTS DATA INTO DUCKDB
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --name load_data worker load_data.py
+	sleep 0.5
 fix: # LOADS DATA FROM DUCKDB TO POSTGRES
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/postgres:/src/postgres --rm --name duckdb duckdb -no-stdin -init ./postgres/scripts/generate_ids.sql $(DB_PATH_ARG)
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/postgres:/src/postgres --rm --name duckdb duckdb -no-stdin -init ./postgres/scripts/adequate.sql $(DB_PATH_ARG)
@@ -73,12 +75,12 @@ ingest: # INGESTS DATA INTO POSTGRES
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --name ingest_data worker ingest_data.py
 	@echo "${BLUE}Data ingestion from DuckDB to PostGres finished!${END}"
 patch: # MODIFIES DATA IN POSTGRES DATABASE
-	# docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --name encrypt_data worker encrypt_data.py
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/postgres:/src/postgres --rm --name duckdb duckdb -no-stdin -init ./postgres/scripts/pii.sql $(DB_PATH_ARG)
 	docker exec $$(docker ps -f name=post -q) psql -U ${PGUSER} -d ${PGDATABASE} -f ./postgres/scripts/constraints.sql
 	@echo "${BLUE}Data patching finished!${END}"
 reports:
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/universidade:/src --rm --name generate_reports worker generate_reports.py
+	@echo "${BLUE}Data reports finished!${END}"
 
 restart:
 	docker compose --env-file $(ENV_FILE) restart postgres
