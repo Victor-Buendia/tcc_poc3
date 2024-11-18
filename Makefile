@@ -43,7 +43,6 @@ clean: # REMOVES ALL GENERATED FILES
 	rm -rf $$(find . -type f -name "*.json" | xargs)
 
 psql: # STARTS POSTGRES INSTANCE
-	chmod +x **/*.sh
 	$(MAKE) certificates
 	docker compose --env-file $(ENV_FILE) up -d postgres
 	sleep 0.5
